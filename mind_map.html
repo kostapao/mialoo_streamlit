@@ -1,0 +1,199 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 800px;
+            height: 700px;
+            background-color: #FFFFFF;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+        /* position absolute is important and the container has to be relative or absolute as well. */
+	    div.popup {
+            position:absolute;
+            top:0px;
+            left:0px;
+            display:none;
+            background-color:#f5f4ed;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+            border: 1px solid #808074;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+	    }
+
+	    /* hide the original tooltip */
+	    .vis-network-tooltip {
+	      display:none;
+	    }
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"font": {"color": "black"}, "id": "Applied machine learning", "label": "Applied machine\nlearning", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Machine_learning\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Multivariate", "label": "Multivariate", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Multivariate_statistics\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Roc curve", "label": "Roc curve", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Receiver_operating_characteristic\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Datum", "label": "Datum", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Data\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Linear regression model", "label": "Linear regression\nmodel", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Linear_regression\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Linear discriminant analysis", "label": "Linear discriminant\nanalysis", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Linear_discriminant_analysis\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Binary data", "label": "Binary data", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Binary_data\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Interpretation", "label": "Interpretation", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Aesthetic_interpretation\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Confusion matrix", "label": "Confusion matrix", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Confusion_matrix\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Quadratic", "label": "Quadratic", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Quadratic_function\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Covariance matrices", "label": "Covariance matrices", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Covariance_matrix\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Training data", "label": "Training data", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Training,_validation,_and_test_sets\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "QDA", "label": "QDA", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Quadratic_classifier\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Gaussian mixture model", "label": "Gaussian mixture\nmodel", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Mixture_model\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Intuition", "label": "Intuition", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Intuition\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Decision boundary", "label": "Decision boundary", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Decision_boundary\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Aic", "label": "Aic", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Akaike_information_criterion\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Parameter estimation", "label": "Parameter estimation", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Estimation_theory\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Cross validation", "label": "Cross validation", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Cross-validation_(statistics)\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Binary variable", "label": "Binary variable", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Binary_data\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Fraud detection", "label": "Fraud detection", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Fraud\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Approach", "label": "Approach", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Scientific_method\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Idea", "label": "Idea", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Idea\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Churn", "label": "Churn", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Churn_rate\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Customer churn", "label": "Customer churn", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Customer_attrition\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Clustering", "label": "Clustering", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Cluster_analysis\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Predict", "label": "Predict", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Prediction\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Parameter", "label": "Parameter", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Parameter\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Binary classification", "label": "Binary classification", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Binary_classification\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Naive bayes", "label": "Naive bayes", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Naive_Bayes_classifier\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Classification", "label": "Classification", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Classification\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Step", "label": "Step", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Step_function\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Posterior probability", "label": "Posterior probability", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Posterior_probability\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Logistic function", "label": "Logistic function", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Logistic_function\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Variable", "label": "Variable", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Variable_(mathematics)\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Quadratic Discriminant Analysis", "label": "Quadratic Discriminant\nAnalysis", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Quadratic_classifier\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Bayes\u0027 theorem", "label": "Bayes\u0027 theorem", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Bayes%27_theorem\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Overfitting", "label": "Overfitting", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Overfitting\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Log", "label": "Log", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Logarithm\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Gaussian Naive Bayes", "label": "Gaussian Naive\nBayes", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Naive_Bayes_classifier\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "GLM", "label": "GLM", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Generalized_linear_model\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Quality", "label": "Quality", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Quality_(philosophy)\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Marketing", "label": "Marketing", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Marketing\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Logistic regression", "label": "Logistic regression", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Logistic_regression\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Predictor", "label": "Predictor", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Predict_(disambiguation)\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Linear model", "label": "Linear model", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Linear_model\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Linear predictor function", "label": "Linear predictor\nfunction", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Linear_predictor_function\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Classifier", "label": "Classifier", "labelHighlightBold": true, "shape": "box", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Statistical_classification\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}]);
+        edges = new vis.DataSet([{"from": "Classification", "to": "Linear discriminant analysis"}, {"from": "Classification", "to": "Naive bayes"}, {"from": "Classification", "to": "Binary classification"}, {"from": "Classification", "to": "Roc curve"}, {"from": "Classification", "to": "QDA"}, {"from": "Classification", "to": "Gaussian mixture model"}, {"from": "Classification", "to": "Quadratic Discriminant Analysis"}, {"from": "Classification", "to": "Intuition"}, {"from": "Classification", "to": "Idea"}, {"from": "Classification", "to": "Linear regression model"}, {"from": "Classification", "to": "Quality"}, {"from": "Classification", "to": "Predict"}, {"from": "Classification", "to": "Logistic regression"}, {"from": "Classification", "to": "Decision boundary"}, {"from": "Classification", "to": "Parameter estimation"}, {"from": "Classification", "to": "Confusion matrix"}, {"from": "QDA", "to": "Linear discriminant analysis"}, {"from": "Quadratic Discriminant Analysis", "to": "QDA"}, {"from": "Binary classification", "to": "Roc curve"}, {"from": "QDA", "to": "Intuition"}, {"from": "Linear discriminant analysis", "to": "Decision boundary"}, {"from": "QDA", "to": "Idea"}, {"from": "Naive bayes", "to": "QDA"}, {"from": "Linear discriminant analysis", "to": "Idea"}, {"from": "Logistic regression", "to": "Linear discriminant analysis"}, {"from": "Logistic regression", "to": "Predict"}, {"from": "Classification", "to": "Predictor"}, {"from": "Classification", "to": "Marketing"}, {"from": "Classification", "to": "Customer churn"}, {"from": "Classification", "to": "Churn"}, {"from": "Classification", "to": "Fraud detection"}, {"from": "Classification", "to": "Datum"}, {"from": "Linear regression model", "to": "Predictor"}, {"from": "Linear regression model", "to": "Binary variable"}, {"from": "Logistic regression", "to": "Approach"}, {"from": "Logistic regression", "to": "Binary data"}, {"from": "Logistic regression", "to": "Step"}, {"from": "Logistic regression", "to": "Linear regression model"}, {"from": "Logistic regression", "to": "Linear predictor function"}, {"from": "Logistic regression", "to": "Logistic function"}, {"from": "Logistic regression", "to": "Predictor"}, {"from": "Logistic regression", "to": "Linear model"}, {"from": "Logistic regression", "to": "GLM"}, {"from": "Logistic regression", "to": "Aic"}, {"from": "Logistic regression", "to": "Interpretation"}, {"from": "Predict", "to": "Linear predictor function"}, {"from": "Classification", "to": "Overfitting"}, {"from": "Classification", "to": "Cross validation"}, {"from": "Classification", "to": "Training data"}, {"from": "Quality", "to": "Datum"}, {"from": "Quality", "to": "Overfitting"}, {"from": "Quality", "to": "Cross validation"}, {"from": "Quality", "to": "Training data"}, {"from": "Confusion matrix", "to": "Predict"}, {"from": "Confusion matrix", "to": "Classifier"}, {"from": "Binary classification", "to": "Classifier"}, {"from": "Linear discriminant analysis", "to": "Quadratic Discriminant Analysis"}, {"from": "Idea", "to": "Quadratic Discriminant Analysis"}, {"from": "QDA", "to": "Datum"}, {"from": "QDA", "to": "Multivariate"}, {"from": "QDA", "to": "Clustering"}, {"from": "QDA", "to": "Gaussian mixture model"}, {"from": "Linear discriminant analysis", "to": "Datum"}, {"from": "Linear discriminant analysis", "to": "Multivariate"}, {"from": "Linear discriminant analysis", "to": "Clustering"}, {"from": "Linear discriminant analysis", "to": "Gaussian mixture model"}, {"from": "QDA", "to": "Bayes\u0027 theorem"}, {"from": "QDA", "to": "Posterior probability"}, {"from": "Linear discriminant analysis", "to": "Bayes\u0027 theorem"}, {"from": "Linear discriminant analysis", "to": "Posterior probability"}, {"from": "Quadratic Discriminant Analysis", "to": "Decision boundary"}, {"from": "Quadratic Discriminant Analysis", "to": "Quadratic"}, {"from": "QDA", "to": "Decision boundary"}, {"from": "QDA", "to": "Quadratic"}, {"from": "Parameter estimation", "to": "Datum"}, {"from": "Parameter estimation", "to": "Parameter"}, {"from": "QDA", "to": "Log"}, {"from": "Intuition", "to": "Log"}, {"from": "Linear discriminant analysis", "to": "Covariance matrices"}, {"from": "Linear discriminant analysis", "to": "Quadratic"}, {"from": "Naive bayes", "to": "Applied machine learning"}, {"from": "Naive bayes", "to": "Gaussian Naive Bayes"}, {"from": "QDA", "to": "Applied machine learning"}, {"from": "QDA", "to": "Gaussian Naive Bayes"}, {"from": "Classification", "to": "Variable"}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 1,
+            "centralGravity": 0.001,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 200
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+        // make a custom popup
+        var popup = document.createElement("div");
+        popup.className = 'popup';
+        popupTimeout = null;
+        popup.addEventListener('mouseover', function () {
+            console.log(popup)
+            if (popupTimeout !== null) {
+                clearTimeout(popupTimeout);
+                popupTimeout = null;
+            }
+        });
+        popup.addEventListener('mouseout', function () {
+            if (popupTimeout === null) {
+                hidePopup();
+            }
+        });
+        container.appendChild(popup);
+
+
+        // use the popup event to show
+        network.on("showPopup", function (params) {
+            showPopup(params);
+        });
+
+        // use the hide event to hide it
+        network.on("hidePopup", function (params) {
+            hidePopup();
+        });
+
+
+        // hiding the popup through css
+        function hidePopup() {
+            popupTimeout = setTimeout(function () { popup.style.display = 'none'; }, 500);
+        }
+
+        // showing the popup
+        function showPopup(nodeId) {
+            // get the data from the vis.DataSet
+            var nodeData = nodes.get([nodeId]);
+            popup.innerHTML = nodeData[0].title;
+
+            // get the position of the node
+            var posCanvas = network.getPositions([nodeId])[nodeId];
+
+            // get the bounding box of the node
+            var boundingBox = network.getBoundingBox(nodeId);
+
+            //position tooltip:
+            posCanvas.x = posCanvas.x + 0.5 * (boundingBox.right - boundingBox.left);
+
+            // convert coordinates to the DOM space
+            var posDOM = network.canvasToDOM(posCanvas);
+
+            // Give it an offset
+            posDOM.x += 10;
+            posDOM.y -= 20;
+
+            // show and place the tooltip.
+            popup.style.display = 'block';
+            popup.style.top = posDOM.y + 'px';
+            popup.style.left = posDOM.x + 'px';
+        }
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

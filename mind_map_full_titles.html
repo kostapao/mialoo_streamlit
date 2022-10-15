@@ -1,0 +1,199 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 800px;
+            height: 700px;
+            background-color: #FFFFFF;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+        /* position absolute is important and the container has to be relative or absolute as well. */
+	    div.popup {
+            position:absolute;
+            top:0px;
+            left:0px;
+            display:none;
+            background-color:#f5f4ed;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+            border: 1px solid #808074;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+	    }
+
+	    /* hide the original tooltip */
+	    .vis-network-tooltip {
+	      display:none;
+	    }
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"font": {"color": "black"}, "id": "Applied machine learning", "label": "Applied machine\nlearning", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Machine_learning\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Comparison of linear and logistic regression", "label": "Comparison of\nlinear and\nlogistic regression", "labelHighlightBold": true, "shape": "text", "title": "Comparison of linear and logistic regression"}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Example use cases of classification", "label": "Example use\ncases of\nclassification", "labelHighlightBold": true, "shape": "text", "title": "Example use cases of classification"}, {"font": {"color": "black"}, "id": "Multivariate", "label": "Multivariate", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Multivariate_statistics\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Roc curve", "label": "Roc curve", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Receiver_operating_characteristic\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Datum", "label": "Datum", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Data\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Example confusion matrix for more than 2 categories", "label": "Example confusion\nmatrix for\nmore than\n2 categories", "labelHighlightBold": true, "shape": "text", "title": "Example confusion matrix for more than 2 categories"}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Example: oscar winning movies!", "label": "Example: oscar\nwinning movies!", "labelHighlightBold": true, "shape": "text", "title": "Example: oscar winning movies!"}, {"font": {"color": "black"}, "id": "Linear regression model", "label": "Linear regression\nmodel", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Linear_regression\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Comparing binary classifiers using the roc curve", "label": "Comparing binary\nclassifiers using\nthe roc\ncurve", "labelHighlightBold": true, "shape": "text", "title": "Comparing binary classifiers using the roc curve"}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Linear discriminant analysis", "label": "Linear discriminant\nanalysis", "labelHighlightBold": true, "shape": "text", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Linear_discriminant_analysis\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Logistic regression inr", "label": "Logistic regression\ninr", "labelHighlightBold": true, "shape": "text", "title": "Logistic regression inr"}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Example: classification of iris flowers", "label": "Example: classification\nof iris\nflowers", "labelHighlightBold": true, "shape": "text", "title": "Example: classification of iris flowers"}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Prediction with logistic regression", "label": "Prediction with\nlogistic regression", "labelHighlightBold": true, "shape": "text", "title": "Prediction with logistic regression"}, {"font": {"color": "black"}, "id": "Binary data", "label": "Binary data", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Binary_data\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Interpretation", "label": "Interpretation", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Aesthetic_interpretation\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Overfitting", "label": "Overfitting", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Overfitting\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Confusion matrix", "label": "Confusion matrix", "labelHighlightBold": true, "shape": "text", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Confusion_matrix\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Quadratic", "label": "Quadratic", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Quadratic_function\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Goal of classification", "label": "Goal of\nclassification", "labelHighlightBold": true, "shape": "text", "title": "Goal of classification"}, {"font": {"color": "black"}, "id": "Covariance matrices", "label": "Covariance matrices", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Covariance_matrix\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Training data", "label": "Training data", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Training,_validation,_and_test_sets\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Prediction inr", "label": "Prediction inr", "labelHighlightBold": true, "shape": "text", "title": "Prediction inr"}, {"font": {"color": "black"}, "id": "QDA", "label": "QDA", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Quadratic_classifier\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Gaussian mixture model", "label": "Gaussian mixture\nmodel", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Mixture_model\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Intuition", "label": "Intuition", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Intuition\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Quality of classification", "label": "Quality of\nclassification", "labelHighlightBold": true, "shape": "text", "title": "Quality of classification"}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Intuition for qda", "label": "Intuition for\nqda", "labelHighlightBold": true, "shape": "text", "title": "Intuition for qda"}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Quadratic discriminant analysis (qda)", "label": "Quadratic discriminant\nanalysis (qda)", "labelHighlightBold": true, "shape": "text", "title": "Quadratic discriminant analysis (qda)"}, {"font": {"color": "black"}, "id": "Parameter", "label": "Parameter", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Parameter\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Decision boundary", "label": "Decision boundary", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Decision_boundary\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Aic", "label": "Aic", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Akaike_information_criterion\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Parameter estimation", "label": "Parameter estimation", "labelHighlightBold": true, "shape": "text", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Estimation_theory\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Cross validation", "label": "Cross validation", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Cross-validation_(statistics)\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Binary variable", "label": "Binary variable", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Binary_data\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Fraud detection", "label": "Fraud detection", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Fraud\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Approach", "label": "Approach", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Scientific_method\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Churn", "label": "Churn", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Churn_rate\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Idea", "label": "Idea", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Idea\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Customer churn", "label": "Customer churn", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Customer_attrition\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Recap: linear regression", "label": "Recap: linear\nregression", "labelHighlightBold": true, "shape": "text", "title": "Recap: linear regression"}, {"font": {"color": "black"}, "id": "Predict", "label": "Predict", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Prediction\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Linear discriminant analysis (lda)", "label": "Linear discriminant\nanalysis (lda)", "labelHighlightBold": true, "shape": "text", "title": "Linear discriminant analysis (lda)"}, {"font": {"color": "black"}, "id": "Binary classification", "label": "Binary classification", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Binary_classification\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Clustering", "label": "Clustering", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Cluster_analysis\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Naive bayes and qda", "label": "Naive bayes\nand qda", "labelHighlightBold": true, "shape": "text", "title": "Naive bayes and qda"}, {"font": {"color": "black"}, "id": "Naive bayes", "label": "Naive bayes", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Naive_Bayes_classifier\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Illustration of decision boundaries for lda", "label": "Illustration of\ndecision boundaries\nfor lda", "labelHighlightBold": true, "shape": "text", "title": "Illustration of decision boundaries for lda"}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Gaussian mixture model example", "label": "Gaussian mixture\nmodel example", "labelHighlightBold": true, "shape": "text", "title": "Gaussian mixture model example"}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Classification", "label": "Classification", "labelHighlightBold": true, "shape": "text", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Classification\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Outline of this chapter", "label": "Outline of\nthis chapter", "labelHighlightBold": true, "shape": "text", "title": "Outline of this chapter"}, {"font": {"color": "black"}, "id": "Step", "label": "Step", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Step_function\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Posterior probability", "label": "Posterior probability", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Posterior_probability\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Logistic function", "label": "Logistic function", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Logistic_function\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Example: oscar winning movies", "label": "Example: oscar\nwinning movies", "labelHighlightBold": true, "shape": "text", "title": "Example: oscar winning movies"}, {"font": {"color": "black"}, "id": "Variable", "label": "Variable", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Variable_(mathematics)\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Quadratic Discriminant Analysis", "label": "Quadratic Discriminant\nAnalysis", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Quadratic_classifier\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Predictor", "label": "Predictor", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Predict_(disambiguation)\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Idea of lda and qda", "label": "Idea of\nlda and\nqda", "labelHighlightBold": true, "shape": "text", "title": "Idea of lda and qda"}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Comparing binary classifiers", "label": "Comparing binary\nclassifiers", "labelHighlightBold": true, "shape": "text", "title": "Comparing binary classifiers"}, {"font": {"color": "black"}, "id": "Log", "label": "Log", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Logarithm\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Bayes\u0027 theorem", "label": "Bayes\u0027 theorem", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Bayes%27_theorem\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Gaussian Naive Bayes", "label": "Gaussian Naive\nBayes", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Naive_Bayes_classifier\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "GLM", "label": "GLM", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Generalized_linear_model\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Comparing logistic regression and lda", "label": "Comparing logistic\nregression and\nlda", "labelHighlightBold": true, "shape": "text", "title": "Comparing logistic regression and lda"}, {"font": {"color": "black"}, "id": "Marketing", "label": "Marketing", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Marketing\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Logistic regression", "label": "Logistic regression", "labelHighlightBold": true, "shape": "text", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Logistic_regression\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Lda vs. qda", "label": "Lda vs.\nqda", "labelHighlightBold": true, "shape": "text", "title": "Lda vs. qda"}, {"font": {"color": "black"}, "id": "Linear model", "label": "Linear model", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Linear_model\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Quality", "label": "Quality", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Quality_(philosophy)\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"color": "#B3C8ED", "font": {"color": "black"}, "id": "Lda \u0026 qda", "label": "Lda \u0026\nqda", "labelHighlightBold": true, "shape": "text", "title": "Lda \u0026 qda"}, {"font": {"color": "black"}, "id": "Linear predictor function", "label": "Linear predictor\nfunction", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Linear_predictor_function\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}, {"font": {"color": "black"}, "id": "Classifier", "label": "Classifier", "labelHighlightBold": true, "shape": "ellipse", "title": "\"\u003ca href=\\\u0027https://en.wikipedia.org/wiki/Statistical_classification\\\u0027 target=\"_blank\"\u003ewiki\u003c/a\u003e\""}]);
+        edges = new vis.DataSet([{"from": "Classification", "to": "QDA"}, {"from": "Classification", "to": "Linear discriminant analysis"}, {"from": "Classification", "to": "Logistic regression"}, {"from": "Comparing binary classifiers", "to": "Binary classification"}, {"from": "Comparing binary classifiers", "to": "Classifier"}, {"from": "Comparing binary classifiers using the roc curve", "to": "Binary classification"}, {"from": "Comparing binary classifiers using the roc curve", "to": "Roc curve"}, {"from": "Comparing logistic regression and lda", "to": "Logistic regression"}, {"from": "Comparing logistic regression and lda", "to": "Linear discriminant analysis"}, {"from": "Comparison of linear and logistic regression", "to": "Logistic regression"}, {"from": "Comparison of linear and logistic regression", "to": "Linear regression model"}, {"from": "Confusion matrix", "to": "Predict"}, {"from": "Example confusion matrix for more than 2 categories", "to": "Confusion matrix"}, {"from": "Example confusion matrix for more than 2 categories", "to": "Classifier"}, {"from": "Example use cases of classification", "to": "Classification"}, {"from": "Example use cases of classification", "to": "Marketing"}, {"from": "Example use cases of classification", "to": "Customer churn"}, {"from": "Example use cases of classification", "to": "Churn"}, {"from": "Example use cases of classification", "to": "Fraud detection"}, {"from": "Example: classification of iris flowers", "to": "Classification"}, {"from": "Example: classification of iris flowers", "to": "Datum"}, {"from": "Example: oscar winning movies", "to": "Predictor"}, {"from": "Example: oscar winning movies!", "to": "Predictor"}, {"from": "Example: oscar winning movies!", "to": "Variable"}, {"from": "Gaussian mixture model example", "to": "Gaussian mixture model"}, {"from": "Goal of classification", "to": "Classification"}, {"from": "Goal of classification", "to": "Predictor"}, {"from": "Idea of lda and qda", "to": "QDA"}, {"from": "Idea of lda and qda", "to": "Linear discriminant analysis"}, {"from": "Idea of lda and qda", "to": "Idea"}, {"from": "Idea of lda and qda", "to": "Quadratic Discriminant Analysis"}, {"from": "Illustration of decision boundaries for lda", "to": "Linear discriminant analysis"}, {"from": "Illustration of decision boundaries for lda", "to": "Decision boundary"}, {"from": "Intuition for qda", "to": "QDA"}, {"from": "Intuition for qda", "to": "Intuition"}, {"from": "Intuition for qda", "to": "Classification"}, {"from": "Intuition for qda", "to": "Log"}, {"from": "Lda \u0026 qda", "to": "QDA"}, {"from": "Lda \u0026 qda", "to": "Linear discriminant analysis"}, {"from": "Lda \u0026 qda", "to": "Datum"}, {"from": "Lda \u0026 qda", "to": "Multivariate"}, {"from": "Lda \u0026 qda", "to": "Clustering"}, {"from": "Lda \u0026 qda", "to": "Gaussian mixture model"}, {"from": "Lda \u0026 qda", "to": "Bayes\u0027 theorem"}, {"from": "Lda \u0026 qda", "to": "Posterior probability"}, {"from": "Lda vs. qda", "to": "QDA"}, {"from": "Lda vs. qda", "to": "Linear discriminant analysis"}, {"from": "Lda vs. qda", "to": "Decision boundary"}, {"from": "Linear discriminant analysis", "to": "Quadratic"}, {"from": "Linear discriminant analysis (lda)", "to": "Linear discriminant analysis"}, {"from": "Linear discriminant analysis (lda)", "to": "Covariance matrices"}, {"from": "Logistic regression", "to": "Approach"}, {"from": "Logistic regression", "to": "Binary data"}, {"from": "Logistic regression", "to": "Step"}, {"from": "Logistic regression", "to": "Linear regression model"}, {"from": "Logistic regression", "to": "Linear predictor function"}, {"from": "Logistic regression", "to": "Logistic function"}, {"from": "Logistic regression", "to": "Predictor"}, {"from": "Logistic regression inr", "to": "Logistic regression"}, {"from": "Logistic regression inr", "to": "Linear model"}, {"from": "Logistic regression inr", "to": "GLM"}, {"from": "Logistic regression inr", "to": "Predictor"}, {"from": "Logistic regression inr", "to": "Aic"}, {"from": "Logistic regression inr", "to": "Linear regression model"}, {"from": "Logistic regression inr", "to": "Interpretation"}, {"from": "Naive bayes and qda", "to": "Naive bayes"}, {"from": "Naive bayes and qda", "to": "QDA"}, {"from": "Naive bayes and qda", "to": "Applied machine learning"}, {"from": "Naive bayes and qda", "to": "Gaussian Naive Bayes"}, {"from": "Outline of this chapter", "to": "Naive bayes"}, {"from": "Outline of this chapter", "to": "Logistic regression"}, {"from": "Outline of this chapter", "to": "Quadratic Discriminant Analysis"}, {"from": "Outline of this chapter", "to": "Classification"}, {"from": "Outline of this chapter", "to": "Classifier"}, {"from": "Parameter estimation", "to": "Datum"}, {"from": "Parameter estimation", "to": "Parameter"}, {"from": "Prediction inr", "to": "Predict"}, {"from": "Prediction with logistic regression", "to": "Logistic regression"}, {"from": "Prediction with logistic regression", "to": "Predict"}, {"from": "Prediction with logistic regression", "to": "Linear predictor function"}, {"from": "Quadratic discriminant analysis (qda)", "to": "Quadratic Discriminant Analysis"}, {"from": "Quadratic discriminant analysis (qda)", "to": "QDA"}, {"from": "Quadratic discriminant analysis (qda)", "to": "Decision boundary"}, {"from": "Quadratic discriminant analysis (qda)", "to": "Quadratic"}, {"from": "Quality of classification", "to": "Classification"}, {"from": "Quality of classification", "to": "Quality"}, {"from": "Quality of classification", "to": "Datum"}, {"from": "Quality of classification", "to": "Overfitting"}, {"from": "Quality of classification", "to": "Cross validation"}, {"from": "Quality of classification", "to": "Training data"}, {"from": "Recap: linear regression", "to": "Linear regression model"}, {"from": "Recap: linear regression", "to": "Predictor"}, {"from": "Recap: linear regression", "to": "Binary variable"}, {"from": "Classification", "to": "Comparing binary classifiers"}, {"from": "Classification", "to": "Comparing binary classifiers using the roc curve"}, {"from": "Classification", "to": "Comparing logistic regression and lda"}, {"from": "Classification", "to": "Comparison of linear and logistic regression"}, {"from": "Classification", "to": "Confusion matrix"}, {"from": "Classification", "to": "Example confusion matrix for more than 2 categories"}, {"from": "Classification", "to": "Example: oscar winning movies"}, {"from": "Classification", "to": "Example: oscar winning movies!"}, {"from": "Classification", "to": "Gaussian mixture model example"}, {"from": "Classification", "to": "Idea of lda and qda"}, {"from": "Classification", "to": "Illustration of decision boundaries for lda"}, {"from": "Classification", "to": "Lda \u0026 qda"}, {"from": "Classification", "to": "Lda vs. qda"}, {"from": "Classification", "to": "Linear discriminant analysis (lda)"}, {"from": "Classification", "to": "Logistic regression inr"}, {"from": "Classification", "to": "Naive bayes and qda"}, {"from": "Classification", "to": "Parameter estimation"}, {"from": "Classification", "to": "Prediction inr"}, {"from": "Classification", "to": "Prediction with logistic regression"}, {"from": "Classification", "to": "Quadratic discriminant analysis (qda)"}, {"from": "Classification", "to": "Recap: linear regression"}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 1,
+            "centralGravity": 0.001,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 200
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+        // make a custom popup
+        var popup = document.createElement("div");
+        popup.className = 'popup';
+        popupTimeout = null;
+        popup.addEventListener('mouseover', function () {
+            console.log(popup)
+            if (popupTimeout !== null) {
+                clearTimeout(popupTimeout);
+                popupTimeout = null;
+            }
+        });
+        popup.addEventListener('mouseout', function () {
+            if (popupTimeout === null) {
+                hidePopup();
+            }
+        });
+        container.appendChild(popup);
+
+
+        // use the popup event to show
+        network.on("showPopup", function (params) {
+            showPopup(params);
+        });
+
+        // use the hide event to hide it
+        network.on("hidePopup", function (params) {
+            hidePopup();
+        });
+
+
+        // hiding the popup through css
+        function hidePopup() {
+            popupTimeout = setTimeout(function () { popup.style.display = 'none'; }, 500);
+        }
+
+        // showing the popup
+        function showPopup(nodeId) {
+            // get the data from the vis.DataSet
+            var nodeData = nodes.get([nodeId]);
+            popup.innerHTML = nodeData[0].title;
+
+            // get the position of the node
+            var posCanvas = network.getPositions([nodeId])[nodeId];
+
+            // get the bounding box of the node
+            var boundingBox = network.getBoundingBox(nodeId);
+
+            //position tooltip:
+            posCanvas.x = posCanvas.x + 0.5 * (boundingBox.right - boundingBox.left);
+
+            // convert coordinates to the DOM space
+            var posDOM = network.canvasToDOM(posCanvas);
+
+            // Give it an offset
+            posDOM.x += 10;
+            posDOM.y -= 20;
+
+            // show and place the tooltip.
+            popup.style.display = 'block';
+            popup.style.top = posDOM.y + 'px';
+            popup.style.left = posDOM.x + 'px';
+        }
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>
